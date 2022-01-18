@@ -7,7 +7,7 @@ The image below describes the Q-Learning Algorithm, which is an oﬀ-policy Temp
 <!---
 ![Q-Learning](/Sutton_Barto.png)
 -->
-<img src="/images/Sutton_Barto.png" alt="TicTacToe Environment" width="600"/>
+<img src="/images/Sutton_Barto.png" alt="Q-learning" width="600"/>
 
 [Source](http://incompleteideas.net/book/the-book-2nd.html): **Image taken from Richard S. Sutton and Andrew G. Barto, Reinforcement Learning: An Introduction, Second edition, 2014/2015, page 158**
 
