@@ -5,10 +5,11 @@ Created on Thu Sep 19 21:50:10 2019
 @author: mauro
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-from itertools import product
 from collections import Counter
+from itertools import product
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def create_state_dictionary():

@@ -5,8 +5,9 @@ Created on Wed Aug  7 10:05:20 2019
 @author: MauroLuzzatto
 """
 
-import numpy as np
 import random
+
+import numpy as np
 
 
 class Qagent(object):

@@ -7,26 +7,20 @@ Created on Wed Jun  5 15:22:09 2019
 
 Description:
 
-Implementation of environment and a q-learning algorithm 
-that learns to play TicTacToe through self-play 
+Implementation of environment and a q-learning algorithm
+that learns to play TicTacToe through self-play
 
 """
 
 import time
 
-import numpy as np
 import gym
 import gym_TicTacToe
+import numpy as np
 
 from Qagent import Qagent
-
-from utils import (
-    create_state_dictionary,
-    reshape_state,
-    load_qtable,
-    save_qtable,
-    test_self_play_learning,
-)
+from utils import (create_state_dictionary, load_qtable, reshape_state,
+                   save_qtable, test_self_play_learning)
 
 state_dict = create_state_dictionary()
 
@@ -122,7 +116,7 @@ for episode_i in range(episodes):
             action = qagent.get_action(state, action_space)
             # remove action from the action space
             action_space = action_space[action_space != action]
-            
+
             new_state, reward, done, _ = env.step(action, player2)
             new_state = state_dict[reshape_state(new_state)]
 
