@@ -16,7 +16,7 @@ class Qagent(object):
     """
 
     def __init__(
-        self, env, state_size, action_size, learning_parameters, exploration_parameters
+        self, state_size, action_size, learning_parameters, exploration_parameters
     ):
         """
         initialize the q-learning agent
@@ -39,8 +39,6 @@ class Qagent(object):
         self.max_epsilon = exploration_parameters["max_epsilon"]
         self.min_epsilon = exploration_parameters["min_epsilon"]
         self.decay_rate = exploration_parameters["decay_rate"]
-
-        self.env = env
 
     def update_qtable(self, state, new_state, action, reward, done):
         """
@@ -87,5 +85,5 @@ class Qagent(object):
 
         else:
             # exploration, random choice
-            action = np.random.choice(action_space)  # self.env.action_space.sample()
+            action = np.random.choice(action_space)
         return action

@@ -79,7 +79,7 @@ def load_qtable(name="qtable"):
     return np.load("{}.npy".format(name))
 
 
-def test_self_play_learning(env, qtable, max_steps, num_test_games, state_dict):
+def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
     """
     play against the trained Q-Learning agent
     Args:
@@ -123,7 +123,7 @@ def test_self_play_learning(env, qtable, max_steps, num_test_games, state_dict):
                     print("Action:", action)
                 action_space = action_space[action_space != action]
 
-                state, reward, done, _ = env.step(action, player1)
+                state, reward, done, _ = env.step((action, player1))
                 state = state_dict[reshape_state(state)]
                 print(reward)
                 if done:
@@ -146,7 +146,7 @@ def test_self_play_learning(env, qtable, max_steps, num_test_games, state_dict):
                 print("Action:", action)
                 action_space = action_space[action_space != action]
 
-                state, reward, done, _ = env.step(action, player2)
+                state, reward, done, _ = env.step((action, player2))
                 state = state_dict[reshape_state(state)]
                 if done:
                     print("**" * 10)
