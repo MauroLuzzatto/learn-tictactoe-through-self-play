@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Sep 19 21:50:10 2019
-
-@author: mauro
-"""
+import os
 
 from collections import Counter
 from itertools import product
@@ -64,19 +59,24 @@ def create_plot(player1_reward_array, player2_reward_array):
     plt.show()
 
 
-def save_qtable(qtable, name="qtable"):
+def save_qtable(qtable, folder, name="qtable"):
     """
     save the qtable
     """
-    np.save("{}.npy".format(name), qtable)
-    print("{}.npy saved!".format(name))
+    np.save(os.path.join(folder, f"{name}.npy"), qtable)
+    print(f"{name}.npy saved!")
 
 
-def load_qtable(name="qtable"):
+def load_qtable(folder, name="qtable"):
     """
     load the qtable
     """
-    return np.load("{}.npy".format(name))
+    try:
+        qtable = np.load(os.path.join(folder, f"{name}.npy"))
+        print(f"{name}.npy loaded!")
+    except:
+        print(f"qtable '{name}' could not be loaded!")
+    return qtable
 
 
 def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
@@ -101,25 +101,22 @@ def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
         start = np.random.randint(2)  # 0 or 1
 
         if start == 0:
-            print("Player 1 beginns (Human)")
+            print("Human beginns")
         else:
-            print("Player 2 beginns (QAgent)")
-        print("--" * 10)
+            print("Agent beginns")
         print("--" * 10)
 
         for _step in range(start, max_steps + start):
 
             # alternate the moves of the players
             if _step % 2 == 0:
-                env.render()
+                print(env.render())
                 print("--" * 10)
-                print("Move Player 1")
+                print("Move Human")
                 action = np.nan
 
                 while action not in action_space:
-                    action = int(
-                        input("choose an action from {}: ".format(action_space))
-                    )
+                    action = int(input(f"choose an action from {action_space}:"))
                     print("Action:", action)
                 action_space = action_space[action_space != action]
 
@@ -128,14 +125,14 @@ def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
                 print(reward)
                 if done:
                     print("**" * 10)
-                    print("player 1 won!")
+                    print("Human won!")
                     print("**" * 10)
-                    env.render()
+                    print(env.render())
                     print("\n" * 2)
                     break
             else:
                 print("--" * 10)
-                print("move player 2")
+                print("move Agent")
 
                 array = np.array(qtable[state, :])
                 order = array.argsort()
@@ -150,9 +147,9 @@ def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
                 state = state_dict[reshape_state(state)]
                 if done:
                     print("**" * 10)
-                    print("player 2 won!")
+                    print("Agent won!")
                     print("**" * 10)
-                    env.render()
+                    print(env.render())
                     print("\n" * 2)
                     break
 
@@ -164,3 +161,4 @@ def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
                     print("--" * 10)
                     print("\n" * 2)
                 break
+                          

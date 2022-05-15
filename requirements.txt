@@ -1,3 +1,5 @@
 gym==0.23.1
 matplotlib
 tqdm
+black
+ipykernel

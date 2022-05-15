@@ -4,3 +4,10 @@
 makefile
 .vscode
 __pycache__/
+
+_archive
+game.py
+
+workspace.code-workspace
+
+IDEAS.md
