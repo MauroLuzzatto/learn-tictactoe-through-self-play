@@ -23,7 +23,7 @@ action_size = env.action_space.n
 
 
 # set training parameters
-episodes = 200_000  # 10**6 * 2
+episodes = 800_000  # 10**6 * 2
 max_steps = 9
 
 # name of the qtable when saved
@@ -38,7 +38,7 @@ learning_parameters = {"learning_rate": 0.8, "gamma": 0.9}
 exploration_parameters = {
     "max_epsilon": 1.0,
     "min_epsilon": 0.0,
-    "decay_rate": 0.000001,
+    "decay_rate": 0.000004,
 }
 
 name = f"qtable_{episodes}"
@@ -84,6 +84,8 @@ start_time = time.time()
 player_1 = Player(color=1, episodes=episodes)
 player_2 = Player(color=2, episodes=episodes)
 
+track_progress = np.zeros(episodes)
+
 for episode in tqdm(range(episodes)):
     state = env.reset()
     state = state_dict[reshape_state(state)]
@@ -113,6 +115,8 @@ for episode in tqdm(range(episodes)):
     player_1.save_reward(episode)
     player_2.save_reward(episode)
 
+    track_progress[episode] = np.sum(qagent.qtable)
+
     if episode % 1_0000 == 0:
 
         sum_q_table = np.sum(qagent.qtable)
@@ -133,6 +137,12 @@ qtable = qagent.get_qtable()
 if save:
     save_qtable(qtable, folder, name)
 
+import matplotlib.pyplot as plt
+
+plt.plot(range(episodes), track_progress)
+plt.show()
+
+
 # test the algorithm with playing against it
 if test:
-    play_tictactoe(env, qtable, max_steps, state_dict)
+    play_tictactoe(env, qtable, state_dict)
