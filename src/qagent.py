@@ -55,6 +55,14 @@ class Qagent(object):
             + self.gamma * np.max(self.qtable[new_state, :]) * (1 - done)
             - self.qtable[state, action]
         )
+    
+    def get_qtable(self) -> np.array:
+        """return qtable
+
+        Returns:
+            np.array: qtable of the agent
+        """
+        return self.qtable
 
     def update_epsilon(self, episode: int, mode: str = "exponential") -> None:
         """reduce epsilon, exponential decay

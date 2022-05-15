@@ -1,93 +1,17 @@
-import os
-
-from collections import Counter
-from itertools import product
-
-import matplotlib.pyplot as plt
 import numpy as np
 
-
-def create_state_dictionary():
-    """
-    create a dictionary, that encodes the game postions (3x3) into a state number (int)
-    Returns:
-      state_dict (dict): key = game position, value = state number
-    """
-    state_number = 0
-    state_dict = {}
-
-    # create all digit combinations with 0,1,3 for 9 digit number
-    for game_position in set(product(set(range(3)), repeat=9)):
-        # count the digits per tuple
-        count_digits = Counter(game_position)
-        # remove all board situation, which are not possible
-        if abs(count_digits[1] - count_digits[2]) <= 1:
-            state_dict[game_position] = state_number
-            state_number += 1
-    print("Number of legal states: {}".format(state_number))
-    return state_dict
+from src.utils import reshape_state
 
 
-def reshape_state(state):
-    """
-    transfrom the 3x3 board numpy array into a flattend tuple
-    Args:
-        state (array): 3x3 numpy array, representing the board postions = state
-    Returns:
-        state (tuple): the flattened numy array converted into a tuple
-    """
-    return tuple(state.reshape(1, -1)[0])
-
-
-def create_plot(player1_reward_array, player2_reward_array):
-    """
-    plot the rewards of the player 1 and 2 versus the number of training episode in self-play
-    Args:
-        player1_reward_array (array): rewards over training episoded player1
-        player2_reward_array (array): rewards over training episoded player2
-    """
-    plt.figure(figsize=(10, 5))
-    plt.title("reward over time")
-    plt.plot(
-        range(len(player1_reward_array)), player1_reward_array, label="Reward Player 1"
-    )
-    plt.plot(
-        range(len(player2_reward_array)), player2_reward_array, label="Reward Player 2"
-    )
-    plt.legend()
-    plt.grid()
-    plt.show()
-
-
-def save_qtable(qtable, folder, name="qtable"):
-    """
-    save the qtable
-    """
-    np.save(os.path.join(folder, f"{name}.npy"), qtable)
-    print(f"{name}.npy saved!")
-
-
-def load_qtable(folder, name="qtable"):
-    """
-    load the qtable
-    """
-    try:
-        qtable = np.load(os.path.join(folder, f"{name}.npy"))
-        print(f"{name}.npy loaded!")
-    except:
-        print(f"qtable '{name}' could not be loaded!")
-    return qtable
-
-
-def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
+def play_tictactoe(env, qtable, state_dict, max_steps=9, num_test_games=3):
     """
     play against the trained Q-Learning agent
     Args:
         env (class): environment class
         qtable (array): numpy array containing the qtable respect. the state-action values
+        state_dict (dict): encoding of the state array
         max_steps (int): max steps to take in one episode
         num_test_games (int): number of times to play against the trained agent
-        state_dict (dict): encoding of the state array
     """
 
     player1 = 1
@@ -153,6 +77,7 @@ def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
                     print("\n" * 2)
                     break
 
+            print("\n")
             # stopping criterion
             if not done and _step == max_steps + start - 1:
                 if reward != env.large - 1:
@@ -161,4 +86,3 @@ def play_tictactoe(env, qtable, max_steps, state_dict, num_test_games=3):
                     print("--" * 10)
                     print("\n" * 2)
                 break
-                          

@@ -6,20 +6,14 @@ that learns to play TicTacToe through self-play
 import time
 
 import gym
+import gym_TicTacToe
 import numpy as np
 from tqdm import tqdm
-import gym_TicTacToe
 
-from qagent import Qagent
-from player import Player
-from utils import (
-    create_state_dictionary,
-    load_qtable,
-    play_tictactoe,
-    reshape_state,
-    save_qtable,
-)
-
+from src.play_tictactoe import play_tictactoe
+from src.player import Player
+from src.qagent import Qagent
+from src.utils import create_state_dictionary, load_qtable, reshape_state, save_qtable
 
 env = gym.envs.make("TTT-v0", small=-1, large=10)
 
@@ -29,7 +23,7 @@ action_size = env.action_space.n
 
 
 # set training parameters
-episodes = 90_000  # 10**6 * 2
+episodes = 200_000  # 10**6 * 2
 max_steps = 9
 
 # name of the qtable when saved
@@ -39,12 +33,12 @@ test = True
 
 num_test_games = 1
 
-learning_parameters = {"learning_rate": 1.0, "gamma": 0.9}
+learning_parameters = {"learning_rate": 0.8, "gamma": 0.9}
 
 exploration_parameters = {
     "max_epsilon": 1.0,
     "min_epsilon": 0.0,
-    "decay_rate": 0.000005,
+    "decay_rate": 0.000001,
 }
 
 name = f"qtable_{episodes}"
@@ -52,10 +46,6 @@ folder = "tables"
 
 
 qagent = Qagent(state_size, action_size, learning_parameters, exploration_parameters)
-
-
-if load:
-    qagent.qtable = load_qtable(folder, name)
 
 
 def play(player, state, action_space):
@@ -86,8 +76,11 @@ def play(player, state, action_space):
     return state, action_space, done
 
 
-start_time = time.time()
+if load:
+    qtable = load_qtable(folder, name)
 
+
+start_time = time.time()
 player_1 = Player(color=1, episodes=episodes)
 player_2 = Player(color=2, episodes=episodes)
 
@@ -135,9 +128,11 @@ for episode in tqdm(range(episodes)):
         )
 
 
+qtable = qagent.get_qtable()
+
 if save:
-    save_qtable(qagent.qtable, folder, name)
+    save_qtable(qtable, folder, name)
 
 # test the algorithm with playing against it
 if test:
-    play_tictactoe(env, qagent.qtable, max_steps, state_dict)
+    play_tictactoe(env, qtable, max_steps, state_dict)
