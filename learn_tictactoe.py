@@ -9,6 +9,7 @@ import gym
 import gym_TicTacToe
 import numpy as np
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 from src.play_tictactoe import play_tictactoe
 from src.player import Player
@@ -23,7 +24,7 @@ action_size = env.action_space.n
 
 
 # set training parameters
-episodes = 800_000  # 10**6 * 2
+episodes = 1_000_000  # 10**6 * 2
 max_steps = 9
 
 # name of the qtable when saved
@@ -38,7 +39,7 @@ learning_parameters = {"learning_rate": 0.8, "gamma": 0.9}
 exploration_parameters = {
     "max_epsilon": 1.0,
     "min_epsilon": 0.0,
-    "decay_rate": 0.000004,
+    "decay_rate": 0.000002,
 }
 
 name = f"qtable_{episodes}"
@@ -48,16 +49,16 @@ folder = "tables"
 qagent = Qagent(state_size, action_size, learning_parameters, exploration_parameters)
 
 
-def play(player, state, action_space):
-    """_summary_
+def play(player: Player, state: int, action_space: np.array) -> tuple:
+    """this function contains the one round of game play for one player
 
     Args:
-        player (_type_): _description_
-        state (_type_): _description_
-        action_space (_type_): _description_
+        player (Player): player class that has its turn
+        state (int): number of the current state
+        action_space (np.arry): array with all available actions
 
     Returns:
-        _type_: _description_
+        tuple: state, action_space, done
     """
     action = qagent.get_action(state, action_space)
 
@@ -95,7 +96,7 @@ for episode in tqdm(range(episodes)):
     player_1.reset_reward()
     player_2.reset_reward()
 
-    # change start of players, randomly change the order players to start the game,
+    # randomly change the order players to start the game,
     # integer either 0 or 1
     start = np.random.randint(2)
 
@@ -137,12 +138,11 @@ qtable = qagent.get_qtable()
 if save:
     save_qtable(qtable, folder, name)
 
-import matplotlib.pyplot as plt
 
 plt.plot(range(episodes), track_progress)
 plt.show()
 
 
-# test the algorithm with playing against it
+# test the algorithm through playing against it
 if test:
     play_tictactoe(env, qtable, state_dict)

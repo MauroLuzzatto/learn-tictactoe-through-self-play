@@ -6,9 +6,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def create_state_dictionary():
+def create_state_dictionary() -> dict:
     """
     create a dictionary, that encodes the game postions (3x3) into a state number (int)
+
     Returns:
       state_dict (dict): key = game position, value = state number
     """
@@ -16,6 +17,7 @@ def create_state_dictionary():
     state_dict = {}
 
     # create all digit combinations with 0,1,3 for 9 digit number
+    # example game postion: (2, 1, 1, 2, 0, 2, 2, 1, 0)
     for game_position in set(product(set(range(3)), repeat=9)):
         # count the digits per tuple
         count_digits = Counter(game_position)
